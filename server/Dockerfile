@@ -26,11 +26,6 @@ LABEL maintainer="joserobertovasconcelos@gmail.com" \
   * SEARCH_FILTER - Qual o filtro. Por exemplo: (uid={{username}}).  O nome username é o utilizado pelo sistema para retornar a identificação do usuário que está logando. \
   * NAMEFIELD - Nome do campo do ldap que retorna o nome (ex: givenName ) \
   * MAILFIELD - Nome do campo do ldap que retorna o email (ex: mail ) \
-  \
-  ##SCPA \
-  \
-  * SISTEMA - Qual o nome do sistema a ser utilizado para login."
-
 
 # Bundle APP files
 RUN mkdir -p /var/opt/sigin
