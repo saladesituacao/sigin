@@ -1,0 +1,97 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+  <div class="row">
+    <sa-big-breadcrumbs [items]="breadcrumb" icon="pencil-square-o" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></sa-big-breadcrumbs>
+  </div>
+
+  <sa-widget [colorbutton]="false" [editbutton]="false" [fullscreenbutton]="false" [custombutton]="false"
+             [sortable]="false">
+    <!-- widget options:
+    usage: <sa-widget [editbutton]="false">
+
+    [colorbutton]="false"
+    [editbutton]="false"
+    [togglebutton]="false"
+    [deletebutton]="false"
+    [fullscreenbutton]="false"
+    [custombutton]="false"
+    [collapsed]="true"
+    [sortable]="false"
+
+    -->
+    <header>
+      <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
+      <h2>{{ tituloinit }} </h2>
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+      <!-- widget content -->
+      <div class="widget-body no-padding">
+
+        <form class="form-horizontal" #f="ngForm" (onSubmit)="onSubmit(f)"
+                  novalidate="novalidate" saBootstrapValidator
+                  data-bv-message="O valor é inválido"
+                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+                  <fieldset style="margin: 15px">
+                      <legend>&nbsp;&nbsp;[{{ tituloForm }}] </legend>
+                      <div class="form-group" >
+                        <div>
+                          <popover-content #sigla
+                             title="Sigla"
+                             [closeOnClickOutside]="true">
+                                  Sigla da fonte de dados.
+                          </popover-content>
+                          <label class="col-md-2 control-label">Sigla <i class="fa fa-question-circle" popoverPlacement="right" popoverOnHover="true" [popover]="sigla"></i></label>
+                          <div class="col-md-2">
+                            <input id="sigla" class="form-control"
+                              placeholder="Sigla da fonte de dados" type="text"
+                              [ngModel]="novafonte.sigla" name="sigla"
+                              required maxlength="10"
+                              data-bv-notempty="true"
+                              data-bv-notempty-message="A sigla da fonte de dados é obrigatória">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group" >
+                        <div>
+                          <popover-content #titulo
+                             title="Descrição"
+                             [closeOnClickOutside]="true">
+                                  Descrição da fonte de dados.
+                          </popover-content>
+                          <label class="col-md-2 control-label">Descrição <i class="fa fa-question-circle" popoverPlacement="right" popoverOnHover="true" [popover]="titulo"></i></label>
+                          <div class="col-md-9">
+                            <input id="titulo" class="form-control"
+                              placeholder="Descrição da fonte de dados" type="text"
+                              [ngModel]="novafonte.descricao" name="descricao"
+                              required maxlength="300"
+                              data-bv-notempty="true"
+                              data-bv-notempty-message="A descrição da fonte de dados é obrigatória">
+                          </div>
+                        </div>
+                      </div>
+                  </fieldset>
+                  <div class="form-actions">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <button class="btn btn-default" type='button' (click)="newFonteDados(f)">
+                          <i class="fa fa-plus"></i>Novo
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                          <i class="fa fa-save"></i>Grava
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+      </div>
+      <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+  </sa-widget>

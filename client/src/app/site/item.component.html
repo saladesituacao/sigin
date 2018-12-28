@@ -1,0 +1,114 @@
+<div id="content">
+  <div class="row">
+    <sa-big-breadcrumbs icon="file-text-o" [items]="['Indicador',indicador.codigo ]" class="col-xs-12 col-sm-12 col-md-12 col-lg-12"></sa-big-breadcrumbs>
+  </div>
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="well padding-10">
+        <div class="row">
+          <div class="col-md-12 padding-left-0">
+            <h3 class="margin-top-0"><a (click)="(null)"> {{ indicador.titulo }} </a><br>
+              <small class="font-xs"><i>Fonte: <a (click)="(null)">{{ indicador.fonte_dados }}</a></i></small></h3>
+            <legend>Descrição</legend>
+            <span [innerHTML]="indicador.descricao||msg_padrao"></span>
+            <br/><br/>
+            <legend>Conceituação</legend>
+            <span [innerHTML]="indicador.conceituacao||msg_padrao"></span>
+            <br/><br/>
+            <legend>Limitações</legend>
+            <span [innerHTML]="indicador.limitacoes||msg_padrao"></span>
+            <br/><br/>
+            <legend>Interpretação</legend>
+            <span [innerHTML]="indicador.interpretacao||msg_padrao"></span>
+            <br/><br/>
+            <legend>Usos</legend>
+            <span class="usos" [innerHTML]="indicador.usos||msg_padrao"></span>
+            <br/><br/>
+            <legend>Método de Cálculo</legend>
+            <span class="metodo_calculo" [innerHTML]="indicador.metodo_calculo||msg_padrao"></span>
+            <div *ngIf="indicador.observacoes">
+              <br/><br/>
+              <legend>Observações</legend>
+              <span class="observacoes" [innerHTML]="indicador.observacoes||msg_padrao"></span>
+            </div>
+            <div>
+              <br/><br/>
+              <legend>Resultados</legend>
+              <resultset [codigo]="indicador.codigo"
+              [granularidade]="indicador.Granularidade.sigla"
+              [criterio]="indicador.criterio_agregacao"></resultset>
+            </div>
+            <br/><br/>
+            <a class="btn btn-primary no-print" routerLink="/"> Voltar </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-barcode"></i> Categorias de Análise</h5>
+        <div class="row">
+          <div class="col-lg-12">
+              <ul class="list-group no-margin">
+                <li class="list-group-item" *ngFor="let item of indicador.CategoriasAnalise">
+                  <a (click)="(null)" class="margin-top-0">{{ item.titulo }}</a>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-file-text"></i> Indicadores relacionados</h5>
+        <div class="row">
+          <div class="col-lg-12">
+              <ul class="no-padding list-unstyled">
+                <li *ngFor="let item of indicador.IndicadoresRelacionados">
+                  <a routerLink="/item/{{ item.codigo }}" class="margin-top-0"> <i class="fa fa-angle-double-right"></i> {{ item.titulo }}</a><br>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-hourglass-1"></i> Periodicidades</h5>
+        <div class="row">
+          <div class="col-lg-12">
+              <ul class="list-group no-margin">
+                <li class="list-group-item">
+                  Atualização: <a (click)="(null)" class="margin-top-0"> {{ indicador.PeriodicidadeAtualizacao.descricao }}</a>
+                </li>
+                <li class="list-group-item">
+                  Monitoramento: <a (click)="(null)" class="margin-top-0"> {{ indicador.PeriodicidadeMonitoramento.descricao }}</a>
+                </li>
+                <li class="list-group-item">
+                  Avaliação: <a (click)="(null)" class="margin-top-0"> {{ indicador.PeriodicidadeAvaliacao.descricao }}</a>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-asterisk"></i> Geral</h5>
+        <div class="row">
+          <div class="col-lg-12">
+              <ul class="list-group no-margin">
+                <li class="list-group-item" *ngIf="indicador.ClassificacaoIndicador">
+                  Classificação: <a (click)="(null)" class="margin-top-0"> {{ indicador.ClassificacaoIndicador.descricao }}</a>
+                </li>
+                <li class="list-group-item" *ngIf="indicador.Granularidade">
+                  Estratificação: <a (click)="(null)" class="margin-top-0"> {{ indicador.Granularidade.descricao }}</a>
+                </li>
+                <li class="list-group-item" *ngIf="indicador.CriterioAgregacao">
+                  Critério de Agregação: <a (click)="(null)" class="margin-top-0"> {{ indicador.CriterioAgregacao.descricao }}</a>
+                </li>
+                <li class="list-group-item" *ngIf="indicador.UnidadeMedida">
+                  Unidade de Medida: <a (click)="(null)" class="margin-top-0"> {{ indicador.UnidadeMedida.descricao }}</a>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

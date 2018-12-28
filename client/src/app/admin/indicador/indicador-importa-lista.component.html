@@ -1,0 +1,189 @@
+<div id="content">
+  <div class="row">
+    <sa-big-breadcrumbs [items]="['Indicadores', titulo ]" icon="file-text-o" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></sa-big-breadcrumbs>
+  </div>
+  <!--
+      The ID "widget-grid" will start to initialize all widgets below
+      You do not need to use widgets if you dont want to. Simply remove
+      the <section></section> and you can use wells or panels instead
+      -->
+  <!-- widget grid -->
+  <sa-widgets-grid>
+    <!-- row -->
+    <div class="row">
+      <div class="col-sm-9">
+      <!-- NEW WIDGET START -->
+      <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="alert alert-info" *ngIf="false">
+          <strong>NOTE:</strong> Dados ainda não validados pela área
+        </div>
+        <!-- Widget ID (each widget will need unique ID)-->
+        <sa-widget class="well">
+          <!-- widget options:
+              usage: <sa-widget id="wid-id-0" [editbutton]="false">
+              [colorbutton]="false"
+              [editbutton]="false"
+              [togglebutton]="false"
+              [deletebutton]="false"
+              [fullscreenbutton]="false"
+              [custombutton]="false"
+              [collapsed]="true"
+              [sortable]="false"
+          -->
+          <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+
+            <h2>Widget Title </h2>
+          </header>
+          <!-- widget div-->
+          <div>
+            <!-- widget content -->
+            <div class="widget-body no-padding" data-sparkline-container="">
+
+              <sa-datatable #listaIndicadores [options]="options"
+                         [detailsFormat]="detailsFormat"
+                         tableClass="display projects-table table table-striped table-bordered table-hover"
+                         width="100%"
+                         (onInit)="getIndicadores()">
+                <thead>
+                <tr>
+                  <th></th>
+                  <th>Indicadores</th>
+                  <th>Código</th>
+                  <th>Periodicidade</th>
+                  <th>Última Atualização</th>
+                  <th>Situação</th>
+                </tr>
+                </thead>
+
+              </sa-datatable>
+            </div>
+            <!-- end widget content -->
+          </div>
+          <!-- end widget div -->
+        </sa-widget>
+        <!-- end widget -->
+      </article>
+      <!-- WIDGET END -->
+      </div>
+    </div>
+    <!-- end row -->
+  </sa-widgets-grid>
+  <!-- end widget grid -->
+</div>
+
+<div bsModal #importaModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form #fimport="ngForm" >
+      <div class="modal-header bg-warning text-white">
+        <button type="button" class="close" (click)="importaModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Importação</h4>
+      </div>
+      <div class="modal-body">
+        <div id="documento-form">
+                <form role="form">
+                  <fieldset>
+                      <legend>&nbsp;&nbsp;[{{ indicadorSelecionado.codigo }} - {{ indicadorSelecionado.titulo }}] </legend>
+                        <div class="row" *ngIf="indicadorSelecionado.PeriodicidadeAtualizacao">
+                          <label class="col-md-2 control-label">Periodicidade</label>
+                          <div class="col-md-10">{{ indicadorSelecionado.PeriodicidadeAtualizacao.descricao }}</div>
+                        </div>
+                        <div class="row" *ngIf="indicadorSelecionado.UnidadeMedida">
+                          <label class="col-md-2 control-label">Unidade de Medida</label>
+                          <div class="col-md-10">{{ indicadorSelecionado.UnidadeMedida.descricao }}</div>
+                        </div>
+                        <div class="row" *ngIf="indicadorSelecionado.Granularidade">
+                          <label class="col-md-2 control-label">Estratificação</label>
+                          <div class="col-md-10">{{ indicadorSelecionado.Granularidade.descricao }}</div>
+                        </div>
+                        <div class="row" *ngIf="indicadorSelecionado.fonte_dados">
+                          <label class="col-md-2 control-label">Fonte</label>
+                          <div class="col-md-10">{{ indicadorSelecionado.fonte_dados }}</div>
+                        </div>
+                        <div class="row">
+                          <label class="switch switch-icon switch-primary">
+                              <input type="checkbox" class="switch-input" checked="">
+                              <span class="switch-label" data-on="" data-off=""></span>
+                              <span class="switch-handle"></span>
+                          </label>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-2 control-label" for="arquivo">Arquivo</label>
+                          <div class="col-md-10">
+                            <input type="file" class="btn btn-default" id="arquivo"
+                              name="arquivo"
+                              accept="text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                              title="Escolha um arquivo"
+                              (change)="fileChangeEvent($event)"
+                              style="width: 100%">
+                            <p class="help-block">
+                              selecione o arquivo a ser carregado (CSV).
+                            </p>
+                          </div>
+                        </div>
+                    </fieldset>
+                    <hr />
+                    <table class="table table-striped" *ngIf="newArquivo.nameFile">
+                  <thead>
+                      <tr>
+                          <th>Nome</th>
+                          <th>Tipo</th>
+                          <th>Tamanho</th>
+                          <th>Data</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{{ newArquivo.nameFile }}</td>
+                          <td><img src="{{ newArquivo.formato | imgtype }}"/></td>
+                          <td>{{ newArquivo.tamanhoFile | fileSize }}</td>
+                          <td>{{ newArquivo.dataFile | date:'dd/MM/yyyy - HH:mm:ss'}}</td>
+                      </tr>
+                  </tbody>
+              </table>
+              </form>
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="importaModal.hide()">
+          <i class="fa fa-ban"></i> Fecha
+        </button>
+        <button type="butten" class="btn btn-primary" (click)="atualizaImportacao()">
+          <i class="fa fa-save"></i> Grava
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<div bsModal #formModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form #fimport="ngForm" >
+      <div class="modal-header bg-primary text-white">
+        <button type="button" class="close" (click)="formModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Formulário</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="formModal.hide()">
+          <i class="fa fa-ban"></i> Fecha
+        </button>
+        <button type="butten" class="btn btn-primary" (click)="atualizaFormulario()">
+          <i class="fa fa-save"></i> Grava
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>

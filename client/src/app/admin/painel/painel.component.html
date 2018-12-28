@@ -1,0 +1,146 @@
+<div id="content">
+    <div class="row">
+        <sa-big-breadcrumbs [items]="['Painel']" icon="tachometer"
+                            class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></sa-big-breadcrumbs>
+    </div>
+
+    <sa-widgets-grid>
+        <div class="row">
+          <!-- NEW WIDGET START -->
+						<article class="col-sm-12 col-md-12 col-lg-12"  *ngIf="listaUsers.length>0">
+              <header>
+                  <h2><strong>Usuários</strong> <i>pendentes aprovação</i></h2>
+              </header>
+							<!-- Widget ID (each widget will need unique ID)-->
+							<div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-2"
+              data-widget-colorbutton="false"
+              data-widget-editbutton="false"
+              data-widget-togglebutton="false"
+              data-widget-deletebutton="false"
+              data-widget-fullscreenbutton="false"
+              data-widget-custombutton="false"
+              data-widget-collapsed="false"
+              data-widget-sortable="false"
+              data-widget-editbutton="false">
+								<!-- widget options:
+								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+								data-widget-colorbutton="false"
+								data-widget-editbutton="false"
+								data-widget-togglebutton="false"
+								data-widget-deletebutton="false"
+								data-widget-fullscreenbutton="false"
+								data-widget-custombutton="false"
+								data-widget-collapsed="true"
+								data-widget-sortable="false"
+
+								-->
+								<header>
+									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+									<h2>Solicitações </h2>
+
+								</header>
+
+								<!-- widget div-->
+								<div>
+
+									<!-- widget content -->
+									<div class="widget-body no-padding">
+										<div class="table-responsive">
+
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Nome</th>
+														<th>Login</th>
+														<th>Email</th>
+                            <th>CPF</th>
+                            <th>Celular</th>
+                            <th>Perfil</th>
+                            <th>Unidade</th>
+                            <th>Ação</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr *ngFor="let item of listaUsers;let i=index">
+														<td>{{i + 1}}</td>
+														<td>{{item.nome}}</td>
+														<td>{{item.login}}</td>
+														<td>{{item.email}}</td>
+                            <td>{{item.cpf |cpf}}</td>
+                            <td>{{item.celular | fone}}</td>
+                            <td title='{{item.Perfil.descricao}}'>{{item.Perfil.sigla}}</td>
+                            <td title='{{item.Unidade.nome}}'>{{item.Unidade.sigla}}</td>
+                            <td>
+                              <button class='btn btn-xs btn-info pull-left' (click)="aprovaSolicitacao(item.codigo)">
+                                <i class="fa fa-thumbs-o-up "></i>&nbsp;Aprova
+                              </button>
+                              <button class='btn btn-xs btn-danger pull-left' style='margin-left:5px' (click)="rejeitaSolicitacao(item.codigo)">
+                                <i class="fa fa-times "></i>&nbsp;Declina
+                              </button>
+                            </td>
+													</tr>
+											</tbody>
+											</table>
+
+										</div>
+									</div>
+									<!-- end widget content -->
+
+								</div>
+								<!-- end widget div -->
+
+							</div>
+							<!-- end widget -->
+
+						</article>
+						<!-- WIDGET END -->
+        </div>
+        <!-- row -->
+        <div class="row">
+          <div class="panel panel-default">
+            <div class="col-sm-6 col-lg-4" *ngIf="false">
+                <div class="panel-body status">
+                  <div class="who clearfix">
+                    <img src="assets/img/avatars/female.png" alt="img" class="online">
+                    <span class="name"><b>Rita de Cássia</b></span>
+                    <span class="from">Último cadastro: <b>1 dia atrás</b> </span>
+                  </div>
+                  <ul class="comments">
+                    <li>
+                      <span class="name">DSX10</span> Indicador 1
+                    </li>
+                    <li>
+                      <span class="name">DSX10</span> Indicador 1
+                    </li>
+                    <li>
+                      <span class="name">DSX10</span> Indicador 1
+                    </li>
+                  </ul>
+                </div>
+            </div>
+            <div class="col-sm-4 col-lg-4">
+                  <header>
+                      <h2><strong>Indicadores</strong> <i>Cadastrados</i></h2>
+                  </header>
+                  <!-- widget div-->
+                  <div>
+                      <!-- widget content -->
+                      <div class="widget-body">
+                        <sa-morris-graph [data]="listaIndicadores"
+                                       type="donut"
+                                       [options]="{
+                                      formater: percentageFormat
+                        }"></sa-morris-graph>
+                      </div>
+                      <!-- end widget content -->
+                  </div>
+                  <footer>
+                    <h2>Total: <span class="txt-color-blue">{{totalIndicadores}}</span></h2>
+                  </footer>
+            </div>
+          </div>
+        </div>
+    </sa-widgets-grid>
+</div>

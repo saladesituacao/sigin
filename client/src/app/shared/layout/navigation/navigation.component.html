@@ -1,0 +1,108 @@
+<aside id="left-panel">
+
+  <!-- User info -->
+  <sa-login-info></sa-login-info>
+  <!-- end user info -->
+
+  <nav>
+    <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+    Please note that these links work a bit different than
+    traditional href="" links. See documentation for details.
+    -->
+
+    <ul saSmartMenu>
+
+        <li routerLinkActive="active">
+            <a routerLink="/admin/painel" title="Painel">
+                <i class="fa fa-lg fa-fw fa-tachometer"></i>
+                <span
+                  class="menu-item-parent">{{'Painel' | i18n}}</span>
+                </a>
+        </li>
+        <li>
+          <a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span
+            class="menu-item-parent">{{'Indicadores' | i18n}}</span></a>
+          <ul>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/indicador">{{'Novo indicador' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/indicadorlista">{{'Lista indicadores' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active" *ngIf="false">
+              <a routerLink="/admin/indicadorlistaunidade">{{'Lista por unidade' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/importa/3">{{'Importa dados' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/importa/4">{{'Formulário de dados' | i18n}}</a>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="!isProduction()" >
+          <a href="#"><i class="fa fa-lg fa-fw fa-table"></i> <span
+            class="menu-item-parent">{{'Programas/Metas' | i18n}}</span></a>
+          <ul>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/programa">{{'Lista Programas/Metas' | i18n}}</a>
+            </li>
+          </ul>
+        </li>
+        <li >
+          <a href="#"><i class="fa fa-lg fa-fw fa-list-alt"></i> <span
+            class="menu-item-parent">{{'Cadastros Auxiliares' | i18n}}</span></a>
+          <ul>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/unidade">{{'Lista de Unidades' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/usuario">{{'Lista de Usuários' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/categoria-analise">{{'Nova Categoria de Análise' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/lista-categoria-analise">{{'Lista Categorias de Análise' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/tag">{{'Novo Grupo de Marcador' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/lista-tag">{{'Lista Grupos de Marcadores' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/unidade-medida">{{'Nova Unidade de Medida' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/lista-unidade-medida">{{'Lista Unidades de Medida' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/fonte-dados">{{'Nova Fonte de Dados' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/lista-fonte-dados">{{'Lista Fonte de Dados' | i18n}}</a>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="false">
+          <a href="#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span
+            class="menu-item-parent">{{'Gráficos' | i18n}}</span></a>
+          <ul>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/grafico">{{'Morbidade' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/admin/grafico2">{{'Microcefalia' | i18n}}</a>
+            </li>
+            <li routerLinkActive="active">
+              <a routerLink="/graphs/sparklines">{{'Zika' | i18n}}</a>
+            </li>
+          </ul>
+        </li>
+    </ul>
+  </nav>
+
+  <sa-minify-menu></sa-minify-menu>
+
+</aside>

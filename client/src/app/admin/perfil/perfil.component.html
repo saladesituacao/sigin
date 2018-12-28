@@ -1,0 +1,177 @@
+<div id="content">
+  <div class="row">
+    <sa-big-breadcrumbs [items]="['Usuário', 'Profile']" icon="group" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></sa-big-breadcrumbs>
+  </div>
+  <!-- end row -->
+  <!-- row -->
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="well well-sm">
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="well well-light well-sm no-margin no-padding">
+              <div class="row">
+                <div class="col-sm-12">
+                    <div class="air air-top-right padding-10">
+                      <h4 class="txt-color-black font-md">{{ getDate() }}</h4>
+                    </div>
+                    <div class="air air-bottom-right padding-10">
+                      <button type="button" class="btn txt-color-white bg-color-teal btn-sm" (click)="editItemPerfil()"><i class="fa fa-check"></i> Edita</button>&#xA0;
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-3 profile-pic">
+                      <img src="assets/img/avatars/male.png" alt="user">
+
+                      <div class="padding-10">
+                        <h4 class="font-md"><strong>1,543</strong>
+                          <br>
+                          <small>Consultas</small>
+                        </h4>
+                        <br>
+                        <h4 class="font-md"><strong>14</strong>
+                          <br>
+                          <small>Indicadores</small>
+                        </h4>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <h1>{{user.nome}}
+                        <br>
+                        <small> Unidade de teste</small>
+                      </h1>
+                      <ul class="list-unstyled">
+                        <li>
+                          <p class="text-muted">
+                            <i class="fa fa-phone"></i>&#xA0;&#xA0;(<span class="txt-color-darken">61</span>) <span class="txt-color-darken">3426</span> - <span class="txt-color-darken">6473</span>
+                          </p>
+                        </li>
+                        <li>
+                          <p class="text-muted">
+                            <i class="fa fa-envelope"></i>&#xA0;&#xA0;<a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                          </p>
+                        </li>
+                        <li>
+                          <p class="text-muted">
+                            <i class="fa fa-calendar"></i>&#xA0;&#xA0;<span class="txt-color-darken">Último Login <a href="" rel="tooltip" title="" data-placement="top" data-original-title="Create an Appointment">4:30 PM</a></span>
+                          </p>
+                        </li>
+                      </ul>
+                      <br>
+
+                      <p class="font-md">
+                        <i>Perfil</i>
+                      </p>
+                      <ul class="list-unstyled">
+                        <li>
+                          <p class="text-muted">
+                            <i class="fa fa-caret-right"></i>&#xA0;&#xA0;<span class="txt-color-darken">Administrador</span>
+                          </p>
+                        </li>
+                      </ul>
+                      <br>
+
+                      <p class="font-md">
+                        <i>Texto</i>
+                      </p>
+
+                      <p>
+                        Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est
+                        eligendi optio
+                        cumque nihil impedit quo minus id quod maxime placeat facere
+                      </p>
+                      <br>
+                      <br>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <hr>
+                  <div class="padding-10">
+                    <div class="tab-content padding-top-10">
+                        <div class="row">
+                          <div class="col-xs-2 col-sm-1">
+                            <time datetime="2017-11-01" class="icon">
+                              <strong>Nov</strong>
+                              <span>01</span>
+                            </time>
+                          </div>
+                          <div class="col-xs-10 col-sm-11">
+                            <h6 class="no-margin"><a href="">Mudança no indicador XADC</a></h6>
+
+                            <p>
+                              Morning our be dry. Life also third land after first beginning to evening cattle created
+                              let subdue you'll winged don't Face firmament.
+                              You winged you're was Fruit divided signs lights i living cattle yielding over light
+                              life life sea, so deep.
+                              Abundantly given years bring were after. Greater you're meat beast creeping behold he
+                              unto She'd doesn't. Replenish brought kind gathering Meat.
+                            </p>
+                          </div>
+                          <div class="col-sm-12">
+                            <hr>
+                          </div>
+                          <div class="col-xs-2 col-sm-1">
+                            <time datetime="2017-09-20" class="icon">
+                              <strong>Set</strong>
+                              <span>20</span>
+                            </time>
+                          </div>
+                          <div class="col-xs-10 col-sm-11">
+                            <h6 class="no-margin"><a href="">Mudança no indicador ACPA</a></h6>
+
+                            <p>
+                              Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi Nam eget dui.
+                              Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero,
+                              sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel.
+                            </p>
+                          </div>
+
+                          <div class="col-sm-12">
+                            <br>
+                          </div>
+                        </div>
+                      <!-- end tab -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end row -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end row -->
+</div>
+
+<div bsModal #perfilModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form #fedit="ngForm" >
+      <div class="modal-header bg-primary text-white">
+        <button type="button" class="close" (click)="perfilModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Perfil</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="perfilModal.hide()">
+          <i class="fa fa-ban"></i> Fecha
+        </button>
+        <button type="butten" class="btn btn-primary" (click)="atualizaPerfil()">
+          <i class="fa fa-save"></i> Grava
+        </button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>

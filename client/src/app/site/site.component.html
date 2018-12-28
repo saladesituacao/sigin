@@ -1,0 +1,129 @@
+<div id="content">
+  <div class="row">
+    <sa-big-breadcrumbs icon="file-text-o" [items]="['Indicadores']" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></sa-big-breadcrumbs>
+
+      <h3 class="col-md-12 margin-top-0" *ngIf="!isEmpty(pesquisa)">
+        <small class="font-xs"><i>Pesquisa por <span [innerHTML]="formataTela(pesquisa)"></span></i></small>
+        &nbsp;&nbsp;<a class="btn btn-primary btn-xs" (click)="limpaFiltro()"><i class="fa fa-times"></i> Limpa filtro</a>
+      </h3>
+  </div>
+  <div class="row" >
+    <div class="col-sm-9">
+      <div class="well padding-10">
+        <div *ngFor="let item of listaIndicadores | paginate: { itemsPerPage: 30, totalItems: total, currentPage: page }">
+            <div class="row">
+              <div class="col-md-4">
+                <div>
+                  <div class="list-inline padding-10">
+                    <sa-morris-graph #graph (onInit)="loadData(item.codigo, 'UF', this.graph)"
+                       type="bar"
+                       [options]="{
+                          xkey: 'uf',
+                          ykeys: [item.codigo.toLowerCase()],
+                          labels: [item.codigo],
+                          barColors: barColorsDemo
+                      }" *ngIf="item.ultima_atualizacao && item.granularidade>2 && (item.criterio_agregacao!=0 || item.granularidade == 3)"></sa-morris-graph>
+
+                      <img src="assets/img/sem-dados.png" *ngIf="!item.ultima_atualizacao" >
+                  </div>
+                </div>
+                <ul class="list-inline padding-10">
+                  <li>
+                    <i class="fa fa-calendar"></i>
+                    <a (click)="(null)"> {{ formatData(item.ultima_atualizacao) }} </a>
+                  </li>
+                  <li>
+                    <i class="fa fa-comments"></i>
+                    <a (click)="(null)"> 0 Comentários </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-8 padding-left-0">
+                <h3 class="margin-top-0"><a routerLink="/item/{{ item.codigo }}"> {{ item.titulo }} </a><br>
+                  <small class="font-xs"><i>Fonte: <a (click)="(null)">{{ item.fonte_dados }}</a></i></small>
+                </h3>
+                <span [innerHTML]="item.conceituacao"></span>
+                <hr/>
+                <span [innerHTML]="formataBadgesTela('Unidade Responsável:', 'sigla', 'default', [item.Unidade])"></span>
+                <span [innerHTML]="formataBadgesTela('Marcador(es):', 'descricao', 'orange', item.Tags)"></span>
+                <br/>
+                <a class="btn btn-primary" routerLink="/item/{{ item.codigo }}"> Leia mais </a>
+              </div>
+            </div>
+            <hr>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-search"></i> Busca dados...</h5>
+        <div class="input-group">
+          <input type="text"
+            class="form-control"
+            name="pesquisa"
+            [(ngModel)]="minha_pesquisa">
+          <span class="input-group-btn">
+									<button class="btn btn-default" type="button"
+                    (click)="buscaDados()">
+                    <i class="fa fa-search"></i>
+                  </button>
+          </span>
+        </div>
+        <!-- /input-group -->
+      </div>
+      <!-- /well -->
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-tags"></i> Marcadores populares</h5>
+        <div class="row">
+          <div class="col-lg-12">
+              <span *ngFor="let item of listaIndicadorPorTag">
+                <a (click)="buscaPorTag(item.codigo, item.descricao )" data-toggle="tooltip" title="Quantidade: {{ item.numero_indicadores }}"><span class="badge badge-info">{{ item.descricao }}</span></a>
+              </span>
+          </div>
+        </div>
+      </div>
+      <!-- /well -->
+      <div class="well padding-10" *ngIf="false">
+        <h5 class="margin-top-0"><i class="fa fa-thumbs-o-up"></i> Compartilhe</h5>
+        <ul class="no-padding no-margin">
+          <p class="no-margin">
+            <a title="Facebook" href=""><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-facebook fa-stack-1x"></i></span></a>
+            <a title="Twitter" href=""><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-twitter fa-stack-1x"></i></span></a>
+            <a title="Google+" href=""><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-google-plus fa-stack-1x"></i></span></a>
+            <a title="Linkedin" href=""><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-linkedin fa-stack-1x"></i></span></a>
+        </p>
+        </ul>
+      </div>
+      <!-- /well -->
+      <!-- /well -->
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-fire"></i> Mais consultados</h5>
+        <ul class="no-padding list-unstyled">
+          <li>
+            <a (click)="(null)" class="margin-top-0">Taxa de mortalidade perinatal</a>
+          </li>
+        </ul>
+      </div>
+      <!-- /well -->
+      <!-- /well -->
+      <div class="well padding-10">
+        <h5 class="margin-top-0"><i class="fa fa-exclamation-circle"></i> Por responsabilidade</h5>
+        <div class="row">
+          <div class="col-lg-12">
+            <ul class="list-group no-margin">
+              <li class="list-group-item" *ngFor="let item of listaIndicadorPorUnidade">
+                <a (click)="buscaPorUnidade(item.codigo, item.sigla)" data-toggle="tooltip" title="{{ item.nome }}"> <span class="badge pull-right">{{ item.numero_indicadores }}</span> {{ item.sigla }} </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- /well -->
+    </div>
+  </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-3">
+      <paginacao (pageChange)="pageChanged($event)"></paginacao>
+    </div>
+</div>
