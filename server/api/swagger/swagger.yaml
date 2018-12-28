@@ -1,0 +1,2655 @@
+swagger: "2.0"
+info:
+  version: "0.1.2"
+  title: titulo
+  description: descrição
+
+# during dev, should point to your local machine
+host: localhost:8000
+# basePath prefixes all resource paths
+basePath: /
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+securityDefinitions:
+ Bearer:
+  description: |
+   Autenticação da API se baseia nos seguintes recursos:
+
+   - API Key
+   - OAuth2
+
+   O acesso a API ncecessita de um token JWT válido que deve ser passado no cabeçalho no campo 'Authorization'.
+
+   Um token JWT válido é gerado pela API e retornado na resposta a rota
+   /login uma vez que possua um email & senha válido.
+
+   A seguinte sintaxe deve ser utilizada no cabeçalho das requisições 'Authorization' :
+       Bearer: xxxxxx.yyyyyyy.zzzzzz
+  type: apiKey
+  name: Authorization
+  in: header
+paths:
+  /login:
+    x-swagger-router-controller: login
+    post:
+      summary: Loga o usuário
+      operationId: authenticate
+      tags:
+        - Infraestrutura
+      description: |
+        Permite ao usuário logar e receber um token uma vez valida a requisição
+      parameters:
+        -
+         in: body
+         name: body
+         description: Informação de email/senha
+         required: true
+         schema:
+          $ref: '#/definitions/Login'
+      responses:
+        '200':
+         description: Login Success
+         schema:
+          $ref: '#/definitions/Token'
+        '400':
+         description: Quando o usuário não é encontrado.
+         schema:
+          $ref: '#/definitions/Error'
+        '403':
+         description: >-
+          Quando usuário existe mas possui credenciais inválidas (bad credentials) OU se o usuário não puder logar
+         schema:
+          $ref: '#/definitions/Error'
+        '503':
+         description: Erro de infraestrutura.
+         schema:
+          $ref: '#/definitions/Error'
+  /api/version:
+    x-swagger-router-controller: login
+    get:
+      description: versão e título da API
+      summary: Versão da API
+      operationId: version
+      tags:
+        - Infraestrutura
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetVersion"
+  /api/user/{codigo}/aprova:
+    x-swagger-router-controller: user
+    post:
+      description: Aprova a solicitação do usuário
+      summary: Aprova solicitação de perfil para o usuário
+      operationId: aprovaSolicitacao
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      tags:
+        - Infraestrutura
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/user/{codigo}/rejeita:
+    x-swagger-router-controller: user
+    post:
+      description: Rejeita a solicitação do usuário
+      summary: Rejeita solicitação de perfil para o usuário
+      operationId: rejeitaSolicitacao
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      tags:
+        - Infraestrutura
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/user/perfil:
+    x-swagger-router-controller: user
+    get:
+      description: Retorna o perfil do usuario logado
+      summary: Lista de Usuários do SIGIN
+      operationId: getPerfil
+      tags:
+        - Infraestrutura
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetUserPerfilResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/user:
+    x-swagger-router-controller: user
+    get:
+      description: Retorna a lista de usuários que utilizam o  - Módulo de Gestão de Indicadores
+      summary: Lista de Usuários do SIGIN
+      operationId: getUsers
+      parameters:
+        - name: situacao
+          type: number
+          in: query
+          required: false
+      tags:
+        - Infraestrutura
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetUserSiginListResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Cria uma solicitação de complementação de cadastro
+      summary: Cria uma solicitação de complementação
+      operationId: createSolicitacao
+      tags:
+        - Infraestrutura
+      security:
+        - Bearer: []
+      parameters:
+        - name: solicitacao
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Solicitacao'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/perfil:
+    x-swagger-router-controller: perfil
+    get:
+      description: Retorna a lista de perfis
+      summary: Lista de perfis
+      operationId: getPerfis
+      parameters:
+        - name: aplicacao
+          type: number
+          in: query
+          required: true
+      tags:
+        - Cadastros Auxiliares
+        - Infraestrutura
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetPerfilListResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/periodicidade:
+    x-swagger-router-controller: periodicidade
+    get:
+      description: Retorna a lista de periodicidades
+      summary: Lista de periodicidades
+      operationId: getPeriodicidades
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetPeriodicidadeListResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/classificacao:
+    x-swagger-router-controller: classificacao-indicador
+    get:
+      description: Retorna a classificacao possivel para os indicadores
+      summary: Lista de classificações
+      operationId: getClassificacoes
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetClassificacaoResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/classificacao6s:
+    x-swagger-router-controller: classificacao6s-indicador
+    get:
+      description: Retorna a classificacao possivel para os indicadores
+      summary: Lista de classificações
+      operationId: getClassificacoes6s
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetClassificacaoResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/classificacaoms:
+    x-swagger-router-controller: classificacaoms-indicador
+    get:
+      description: Retorna a classificacao MS do pacto interfederativo para os indicadores
+      summary: Lista de classificações do MS
+      operationId: getClassificacoesMS
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetClassificacaoResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/fonte-parametro:
+    x-swagger-router-controller: parametro-fonte
+    get:
+      description: Retorna a lista de fontes para relacionar ao parametro de referencia do indicador
+      summary: Lista de fontes que fornecem parâmetros de referência
+      operationId: getFontesParametro
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetParametroFonteResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Cria uma nova fonte de dados para um parâmtro
+      summary: Cria uma nova fonte de dados
+      operationId: createFonteParametro
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: fonte
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Fonte'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/fonte-parametro/{codigo}:
+    x-swagger-router-controller: parametro-fonte
+    get:
+      description: Retorna uma fonte de dados
+      summary: Recupera uma fonte de dados
+      operationId: getFontesParametroItem
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Edita uma fonte de dados
+      summary: Edita um fonte para os dados de parâmetros
+      operationId: editaFonteParametro
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+        - name: fonte
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Fonte'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Apaga uma fonte
+      summary: Apaga um registro de uma fonte de dados
+      operationId: apagaFonteParametro
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /api/unidade-medida:
+    x-swagger-router-controller: unidade-medida
+    get:
+      description: Retorna as unidades de medida possiveis para os indicadores
+      summary: Lista de Unidades
+      operationId: getUnidadesMedida
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetUnidadeMedidaResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Cria uma nova unidade de medida
+      summary: Cria uma nova unidade de medida
+      operationId: createUnidadeMedida
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: unidade_medida
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UnidadeMedida'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/unidade-medida/{codigo}:
+    x-swagger-router-controller: unidade-medida
+    get:
+      description: Retorna uma unidade de medida
+      summary: Recupera uma unidade de medida
+      operationId: getUnidadesMedidaItem
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Edita uma unidade de medida
+      summary: Edita um registro de uma unidade de medida
+      operationId: editaUnidadeMedida
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+        - name: unidade_medida
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UnidadeMedida'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Apaga uma unidade de medida
+      summary: Apaga um registro de uma unidade de medida
+      operationId: apagaUnidadeMedida
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/tipo-consulta:
+    x-swagger-router-controller: tipo-consulta
+    get:
+      description: Retorna o tipo de consulta efetuada para recuperar o indicador
+      summary: Lista de tipos de consulta
+      operationId: getTiposConsulta
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetTipoConsultaResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/granularidade:
+    x-swagger-router-controller: granularidade
+    get:
+      description: Retorna a lista de granularidades possiveis para a consulta aos indicadores
+      summary: Lista de granularidades
+      operationId: getGranularidade
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetGranularidadeResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/criterio-agregacao:
+    x-swagger-router-controller: criterio-agregacao
+    get:
+      description: Retorna a lista de critérios de agregação possiveis para a consulta aos indicadores
+      summary: Lista de critérios de agregação
+      operationId: getCriterioAgregacao
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetCriterioAgregacaoResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/tipo-banco-dados:
+    x-swagger-router-controller: tipo-banco-dados
+    get:
+      description: Retorna os bancos de dados possiveis para a consulta aos indicadores
+      summary: Lista de banco de dados possíveis para consulta
+      operationId: getTipoBancoDados
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetTipoBancoDadosResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/banco-dados:
+    x-swagger-router-controller: banco-dados
+    get:
+      description: Retorna os bancos de dados possiveis para a consulta aos indicadores
+      summary: Lista de banco de dados possíveis para consulta
+      operationId: getBancoDados
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetBancoDadosResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Cria uma nova informação de banco de dados
+      summary: Cria uma nova informação de banco de dados
+      operationId: createBancoDados
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: banco-dados
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BancoDados'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/banco-dados/{codigo}:
+    x-swagger-router-controller: banco-dados
+    get:
+      description: Retorna uma unidade de informação de banco de dados
+      summary: Recupera um registro de banco de dados
+      operationId: getBancoDadosItem
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Edita uma informçãoa de banco de dados
+      summary: Edita um registro de informação de banco de dados
+      operationId: editaBancoDados
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+        - name: banco-dados
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BancoDados'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Apaga um registro de banco de dados
+      summary: Apaga um registro de banco de dados
+      operationId: apagaBancoDados
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /api/aplicacao:
+    x-swagger-router-controller: aplicacao
+    get:
+      description: Retorna as aplicações passíveis de serem solicitadas
+      summary: Lista de aplicações cadastradas
+      operationId: getAplicacoes
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetAplicacoesResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/situacao-carga:
+    x-swagger-router-controller: situacao-carga
+    get:
+      description: Retorna os possiveis para controle da situacao da carga de dados via importacao
+      summary: Lista de situações de carga possíveis
+      operationId: getSituacaoCarga
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetSituacaoCargaResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/tipo-arquivo:
+    x-swagger-router-controller: tipo-arquivo
+    get:
+      description: Retorna os tipos de arquivo possiveis para carga de dados via importacao
+      summary: Lista de tipos de arquivo de carga possíveis
+      operationId: getTipoArquivo
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetTipoArquivoResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/polaridade:
+    x-swagger-router-controller: polaridade
+    get:
+      description: Retorna os tipos de polaridade previstos para os indicadores
+      summary: Lista de polaridades possíveis para consulta
+      operationId: getPolaridades
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetPolaridadesResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/tag:
+    x-swagger-router-controller: tag
+    get:
+      description: Retorna as tags possíveis de marcação
+      summary: Lista os marcadores
+      operationId: getTags
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetTagListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/tag-categoria:
+    x-swagger-router-controller: tag-categoria
+    get:
+      description: Retorna as categorias das tags possíveis de marcação
+      summary: Lista as categorias de marcação
+      operationId: getTagCategoria
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetTagCategoriaListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Cria uma nova categoria de tags
+      summary: Cria uma nova categoria de tags
+      operationId: createTagCategoria
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TagCategoria'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/tag-categoria/{codigo}:
+    x-swagger-router-controller: tag-categoria
+    get:
+      description: Retorna as categorias de tag possíveis
+      summary: Recupera uma categoria de tag
+      operationId: getTagCategoriaItem
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Edita uma categoria de tag
+      summary: Edita um registro de categoria de tag
+      operationId: editaTagCategoria
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TagCategoria'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Apaga uma categoria de tag
+      summary: Apaga um registro de categoria de tag
+      operationId: apagaTagCategoria
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/categoria-analise:
+    x-swagger-router-controller: categoria-analise
+    get:
+      description: Retorna as categorias de análises possíveis
+      summary: Lista de categorias de análise
+      operationId: getCategoriasAnalises
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/CategoriaAnalise"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Cria uma nova categoria de analise
+      summary: Cria uma nova categoria de análise
+      operationId: createCategoriaAnalise
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: categoria_analise
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CategoriaAnalise'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /api/categoria-analise/{codigo}:
+    x-swagger-router-controller: categoria-analise
+    get:
+      description: Retorna as categorias de análises possíveis
+      summary: Recupera uma categoria de análise
+      operationId: getCategoriaAnalise
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponseTratado"
+    delete:
+      description: Apaga uma categoria de análise
+      summary: Apaga um registro de categoria de análise
+      operationId: apagaCategoriaAnalise
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Atualiza as informações de uma categoria de análise
+      summary: Atualiza as informações de uma categoria de análise
+      operationId: editaCategoriaAnalise
+      tags:
+        - Cadastros Auxiliares
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: categoria_analise
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/IndicadorAtualizacao'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /api/indicador/{codigos}/resultset:
+    x-swagger-router-controller: resultset
+    get:
+      description: Retorna os valores do indicador
+      summary: Query para valores de indicadores
+      operationId: getResultado
+      produces:
+        - application/json
+      tags:
+        - Indicadores
+        - Consulta Dados
+      parameters:
+        - name: codigos
+          type: array
+          items:
+            type: string
+          in: path
+          required: true
+          description: Codigos dos indicadores a serem pesquisados
+        - name: tipo
+          type: string
+          in: query
+          enum: [BR, RG, UF, MN, CN]
+          required: false
+          default: MN
+          description: Tipo de consulta (BR - Brasil, MN - Municipal, RG - Região, UF - Estadual, CN = CNES)
+        - name: filtro
+          type: string
+          in: query
+          enum: [MUN, UF, REG, CID, CCL, MET, FRT, QUA, SA, AL, RIB, QSU]
+          required: false
+          description: Tipos de filtro (MUN-Municipal, UF-Estado, FRT-Fronteiras, SA-Semi árido, RIB-Ribeirinhos, MET-Região Metropolitana, CID-Território da cidadania )
+        - name: porcategoria
+          type: string
+          in: query
+          required: false
+          description: Codigo da categoria de analise para abertura de resultados da consulta de indicador
+        - name: valores_filtro
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Valores a serem filtrados
+        - name: formato
+          type: string
+          in: query
+          enum: [LIN, CDA, TAB]
+          required: false
+          default: LIN
+          description: |
+              Indica o tipo de formatação a ser utilizado na saída dos dados:
+              * LIN: Formato linear (Default)
+              * CDA: Padrão CDA - Community Data Access
+              * TAB: Formato tabular (Indicador => { tempo })
+        - name: data
+          type: array
+          items:
+            type: number
+          in: query
+          required: false
+          description: Filtro para data dos dados da consulta conforme periodicidade do indicador (ano, anomes e anomesdia ).
+
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/ResultIndicador"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponseTratado"
+  /api/indicador/{codigos}/query:
+    x-swagger-router-controller: query
+    get:
+      description: Retorna o valor do indicador
+      summary: Query para valores de indicadores
+      operationId: getValores
+      tags:
+        - Indicadores
+      parameters:
+        - name: codigos
+          type: array
+          items:
+            type: string
+          in: path
+          required: true
+          description: Codigos dos indicadores a serem pesquisados
+        - name: tipo
+          type: string
+          in: query
+          enum: [UF, MUN]
+          required: false
+          description: Tipo de consulta (MUN - Municipal, UF - Estadual)
+        - name: filtro
+          type: string
+          in: query
+          enum: [MUN, UF, REG, CID, CCL, MET, FRT, QUA, SA, AL, RIB, QSU]
+          required: false
+          description: Tipos de filtro (MUN-Municipal, UF-Estado, FRT-Fronteiras, SA-Semi árido, RIB-Ribeirinhos, MET-Região Metropolitana, CID-Território da cidadania )
+        - name: valores_filtro
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Valores a serem filtrados
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/QueryIndicador"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/importacao:
+    x-swagger-router-controller: indicador
+    get:
+      description: Retorna os dados de importação dos indicadores cadastrados no sistema (3 - Importação e 4 - Formulário)
+      summary: Lista de indicadores que podem ser importados
+      operationId: getIndicadoresImportacao
+      tags:
+        - Indicadores
+        - Importação
+      parameters:
+        - name: tipo
+          in: query
+          required: true
+          enum: [3, 4]
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetIndicadorConsulta"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador:
+    x-swagger-router-controller: indicador
+    get:
+      description: Retorna os indicadores cadastrados no sistema
+      summary: Lista de indicadores
+      operationId: getIndicadores
+      tags:
+        - Indicadores
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          type: number
+        - name: offset
+          in: query
+          required: false
+          type: number
+        - name: query
+          in: query
+          required: false
+          type: string
+        - name: secretaria
+          in: query
+          required: false
+          type: number
+
+        - name: tag
+          in: query
+          required: false
+          type: array
+          items:
+            type: number
+        - name: codigos
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/GetIndicadorConsulta"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Cria um novo indicador
+      summary: Cria um novo indicador
+      operationId: createIndicador
+      tags:
+        - Indicadores
+      parameters:
+        - name: indicador
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/IndicadorAtualizacao'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador-portag:
+    x-swagger-router-controller: tag
+    get:
+      description: Retorna o numero de indicadores por tag no sistema
+      summary: Número de indicadores por tag
+      operationId: countIndicadorPorTag
+      tags:
+        - Indicadores
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+            properties:
+              unidades:
+                type: array
+                items:
+                  type: object
+
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador-porunidade:
+    x-swagger-router-controller: unidade
+    get:
+      description: Retorna o numero de indicadores por unidade no sistema
+      summary: Número de indicadores por unidade
+      operationId: countIndicadorPorUnidade
+      tags:
+        - Indicadores
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+            properties:
+              unidades:
+                type: array
+                items:
+                  type: object
+
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+  /api/indicador-id/{id}:
+    x-swagger-router-controller: indicador
+    get:
+      description: Le um registro de indicador
+      summary: Retorna um registro de um indicador
+      operationId: getIndicadorPorId
+      tags:
+        - Indicadores
+      parameters:
+        - name: id
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}:
+    x-swagger-router-controller: indicador
+    get:
+      description: Le um registro de indicador
+      summary: Retorna um registro de um indicador
+      operationId: getIndicador
+      tags:
+        - Indicadores
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: object
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Apaga um registro de indicador
+      summary: Apaga um registro de indicador
+      operationId: deleteIndicador
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponseTratado"
+    put:
+      description: Atualiza as informações de um registro de indicador
+      summary: Atualiza as informações de um indicador
+      operationId: editaIndicador
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: indicador
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/IndicadorAtualizacao'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /api/indicador/{codigo}/conceituacao:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza conceituação de um indicador
+      summary: Atualiza uma conceituação de um indicador
+      operationId: updateConceituacao
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: conceituacao
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Conceituacao'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /api/indicador/{id_pai}/indicador-relacionado/{id}:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Adiciona relação a um indicador
+      summary: Adiciona a relação entre indicadores
+      operationId: addIndicadorRelacionado
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: id_pai
+          type: number
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Rompe a relação com um indicador
+      summary: Rompe a relação entre indicadores
+      operationId: deleteIndicadorRelacionado
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: id_pai
+          type: number
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{id}/categoria-analise/{categoria_analise}:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Adiciona categoria relacionada a um indicador
+      summary: Adiciona uma categoria de análise a um indicador
+      operationId: addCategoriaAnalise
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: categoria_analise
+          type: string
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Rompe a relação com um indicador
+      summary: Rompe a relação entre indicadores
+      operationId: deleteCategoriaAnalise
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: categoria_analise
+          type: string
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{id}/responsavel-gerencial/{responsavel_gerencial}:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Adiciona responsavel gerencial relacionado a um indicador
+      summary: Adiciona um responsável geárencial
+      operationId: addResponsavelGerencial
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: responsavel_gerencial
+          type: string
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Rompe a relação entre o responsável gerencial e um indicador
+      summary: Rompe a relação entre indicadores e responsável gerencial
+      operationId: deleteResponsavelGerencial
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: responsavel_gerencial
+          type: string
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{id}/responsavel-tecnico/{responsavel_tecnico}:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Adiciona responsável tniéco relacionado a um indicador
+      summary: Adiciona uma responsável técnico a um indicador
+      operationId: addResponsavelTecnico
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: responsavel_tecnico
+          type: string
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Rompe a relação de responsabilidade técnica com um indicador
+      summary: Rompe a relação entre responsável técnico e um indicador
+      operationId: deleteResponsavelTecnico
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: responsavel_tecnico
+          type: string
+          in: path
+          required: true
+        - name: id
+          in: path
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /api/indicador/{codigo}/interpretacao:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza a interpretação de um indicador
+      summary: Atualiza o campo interpretação de um indicador
+      operationId: updateInterpretacao
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: interpretacao
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Interpretacao'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}/procedimento_operacional:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza o procedimento operacional de um indicador
+      summary: Atualiza o procedimento operacional de um indicador
+      operationId: updateProcedimentoOperacional
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: procedimento_operacional
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ProcedimentoOperacional'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}/uso:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza a interpretação de um indicador
+      summary: Atualiza a interpretação de um indicador
+      operationId: updateUso
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: interpretacao
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Uso'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}/limitacao:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza as limitações de um indicador
+      summary: Atualiza as limitações de um indicador
+      operationId: updateLimitacao
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: limitacao
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Limitacao'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}/nota:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza as Notas de um indicador
+      summary: Atualiza as Notas de um indicador
+      operationId: updateNota
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: nota
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Nota'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}/observacao:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza as observações de um indicador
+      summary: Atualiza as observações de um indicador
+      operationId: updateObservacao
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: observacao
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Observacao'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}/fonte_dados:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza a fonte de dados de um indicador
+      summary: Atualiza a fonte de dados de um indicador
+      operationId: updateFonteDados
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: fonte_dados
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/FonteDados'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/indicador/{codigo}/metodo_calculo:
+    x-swagger-router-controller: indicador
+    patch:
+      description: Atualiza o Método de Cálculo de um indicador
+      summary: Atualiza o Método de Cálculo de um indicador
+      operationId: updateMetodoCalculo
+      tags:
+        - Indicadores
+      security:
+        - Bearer: []
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: metodo_calculo
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MetodoCalculo'
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/unidade/import:
+    x-swagger-router-controller: unidade
+    post:
+      description: Importa dados do SIORG
+      summary: Importa arquivo CSV do SIORG
+      operationId: import_arquivo
+      consumes:
+        - multipart/form-data  # and/or application/x-www-form-urlencoded
+      tags:
+        - Importação
+
+      parameters:
+        - name: arquivo
+          in: formData
+          required: true
+          type: file
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/unidade-hierarquia:
+    x-swagger-router-controller: unidade
+    get:
+      description: Lista unidades de forma hierarquica
+      summary: Lista unidades com suas respectivas unidades filha
+      operationId: getUnidadesHierarchical
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/QueryUnidade"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/unidade:
+    x-swagger-router-controller: unidade
+    get:
+      description: Lista unidades
+      summary: Lista unidades
+      operationId: getUnidades
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/QueryUnidade"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Inclui uma unidade
+      summary: Lista unidades
+      operationId: createUnidade
+      parameters:
+        - name: unidade
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Unidade'
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/unidade/{codigo}:
+    x-swagger-router-controller: unidade
+    get:
+      description: Lista informações de uma unidade
+      summary: Lista unidades
+      operationId: getUnidade
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/Unidade"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Edita dados de uma unidade
+      summary: Atualiza unidades
+      operationId: editaUnidade
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: unidade
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Unidade'
+      tags:
+        - Cadastros Auxiliares
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Apaga uma unidade
+      summary: Apaga uma unidade
+      operationId: deleteUnidade
+      tags:
+        - Cadastros Auxiliares
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/programa:
+    x-swagger-router-controller: programa
+    get:
+      description: Lista programas e itens
+      summary: Lista programas
+      operationId: getProgramas
+      tags:
+        - Programas
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/QueryPrograma"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Inclui um programa
+      summary: Inclui um programa
+      operationId: createPrograma
+      parameters:
+        - name: programa
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Programa'
+      tags:
+        - Programas
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /api/programa/{codigo}:
+    x-swagger-router-controller: programa
+    get:
+      description: Lista informações de um item de programa
+      summary: Lista informações de um programa
+      operationId: getPrograma
+      tags:
+        - Programas
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/Programa"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Edita dados de um programa
+      summary: Atualiza dados de programa
+      operationId: editaPrograma
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+        - name: unidade
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Programa'
+      tags:
+        - Programas
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Erro
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Apaga uma unidade
+      summary: Apaga uma unidade
+      operationId: deletePrograma
+      tags:
+        - Programas
+      parameters:
+        - name: codigo
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+definitions:
+  GetUserSiginListResponse:
+    description: Lista de Usuários do SIGIN
+    type: object
+
+  Programa:
+    description: Programa
+    type: object
+    properties:
+      codigo:
+        type: [integer,'null']
+      sigla:
+        type: string
+      titulo:
+        type: string
+      detalhamento:
+        type: [string, 'null']
+      programa_pai:
+        type: [number,'null']
+
+  QueryPrograma:
+    description: Programas
+    properties:
+      resultset:
+        type: array
+        items:
+          type: object
+      info:
+        type: object
+      metadata:
+        type: array
+        items:
+          type: object
+  Unidade:
+    description: Unidade
+    type: object
+    properties:
+      codigo:
+        type: [integer,'null']
+      sigla:
+        type: string
+      nome:
+        type: string
+      email:
+        type: [string, 'null']
+      telefone:
+        type: [string, 'null']
+      competencia:
+        type: [string, 'null']
+      atividade:
+        type: [string, 'null']
+      isInformal:
+        type: boolean
+      unidade_pai:
+        type: [number,'null']
+
+  QueryUnidade:
+    description: Unidades
+    type: object
+    properties:
+      resultset:
+        type: array
+        items:
+          type: object
+      info:
+        type: object
+      metadata:
+        type: array
+        items:
+          type: object
+  ResultIndicador:
+    description: Resultado da consulta especifica de indicador
+    type: [object, array]
+
+  QueryIndicador:
+    description: Resultado da consulta especifica de indicador
+    type: object
+    properties:
+      resultset:
+        type: array
+        items:
+          type: object
+      info:
+        type: object
+      metadata:
+        type: array
+        items:
+          type: object
+  Solicitacao:
+    description: Objeto solicitação
+    type: object
+    properties:
+      codigo:
+        type: number
+        description: Código do registro do usuário
+      login:
+        type: string
+      cpf:
+        type: string
+      nome:
+        type: string
+      email:
+        type: string
+      ramal:
+        type: string
+      celular:
+        type: string
+      cargo:
+        type: string
+      data_aprovacao:
+        type: [string, 'null']
+      usuario_aprovacao:
+        type: [number, 'null']
+      PerfilCodigo:
+        type: number
+      SituacaoCodigo:
+        type: number
+      UnidadeCodigo:
+        type: number
+
+  IndicadorAtualizacao:
+    description: Objeto indicador
+    type: object
+    properties:
+      codigo:
+        type: string
+        description: mnemonico do indicador
+      titulo:
+        type: string
+        description: Titulo do Indicador
+      descricao:
+        type: string
+        description: Descrição do Indicador
+      periodicidade_atualizacao:
+        type: number
+        description: Periodicidade de atualização dos dados
+      periodicidade_avaliacao:
+        type: number
+        description: Periodicidade de avaliação dos dados
+      periodicidade_monitoramento:
+        type: number
+        description: Periodicidade de monitoramento dos dados
+      polaridade:
+        type: number
+        description: Polaridade da medida do indicador
+      unidade_medida:
+        type: number
+        description: Código da unidade de medida
+      ativo:
+        type: boolean
+        description: Indicador ativo
+      acumulativo:
+        type: boolean
+        description: Indica se é acumulativo nos resultados
+      privado:
+        type: boolean
+        description: Indica se precida ter privacidade de divulgação
+      indice_referencia:
+        type: [number, 'null']
+        description: Índice que é considerado para o indicador
+      unidade_responsavel:
+        type: number
+        description: Código da Unidade Responsável
+      classificacao:
+        type: number
+        description: Código da classificçaão do Indicador
+      granularidade:
+        type: number
+        description: Código da granularidade do Indicador
+      criterio_agregacao:
+        type: [number, 'null']
+        description: Código do critério de agregacão do Indicador
+  Conceituacao:
+    type: object
+    properties:
+      conceituacao:
+        type: string
+  Interpretacao:
+    type: object
+    properties:
+      interpretacao:
+        type: string
+  ProcedimentoOperacional:
+    type: object
+    properties:
+      procedimento_operacional:
+        type: string
+  Uso:
+    type: object
+    properties:
+      usos:
+        type: string
+  Limitacao:
+    type: object
+    properties:
+      limitacoes:
+        type: string
+  Nota:
+    type: object
+    properties:
+      notas:
+        type: string
+  Observacao:
+    type: object
+    properties:
+      observacoes:
+        type: string
+  MetodoCalculo:
+    type: object
+    properties:
+      metodo_calculo:
+        type: string
+  FonteDados:
+    type: object
+    properties:
+      fonte_dados:
+        type: string
+  Login:
+    type: object
+    properties:
+      username:
+        description: Email do usuário
+        type: string
+      password:
+        description: Senha do usuário
+        type: string
+      aplicacao:
+        description: Aplicação
+        type: integer
+
+  Token:
+    type: object
+    properties:
+      token:
+        type: string
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Retorna uma mensagem de sucesso
+      error:
+        type: string
+        description: Retorna o código de erro. Zero se deu certo.
+  GetVersion:
+    type: object
+    properties:
+      version:
+        type: string
+      title:
+        type: string
+  GetTagCategoriaListResponse:
+    required:
+      - tag_categorias
+    properties:
+      tag_categorias:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetCriterioAgregacaoResponse:
+    required:
+      - criterio_agregacao
+    properties:
+      criterio_agregacao:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetGranularidadeResponse:
+    required:
+      - granularidade
+    properties:
+      granularidade:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetPolaridadesResponse:
+    required:
+      - polaridades
+    properties:
+      polaridades:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetSituacaoCargaResponse:
+    required:
+      - situacao_carga
+    properties:
+      situacao_carga:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetTipoArquivoResponse:
+    required:
+      - tipo_arquivo
+    properties:
+      tipo_arquivo:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetAplicacoesResponse:
+    required:
+      - aplicacoes
+    properties:
+      aplicacoes:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+            mime:
+              type: string
+  GetTipoBancoDadosResponse:
+    required:
+      - tipo_banco_dados
+    properties:
+      tipo_banco_dados:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+            mime:
+              type: string
+  GetBancoDadosResponse:
+    required:
+      - banco_dados
+    properties:
+      banco_dados:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+            host:
+              type: [string, 'null']
+            usuario:
+              type: [string, 'null']
+            schema:
+              type: [string, 'null']
+
+
+  GetUserPerfilResponse:
+    required:
+      - perfil
+    properties:
+      perfil:
+        type: object
+  GetTipoConsultaResponse:
+    required:
+      - tipos_consulta
+    properties:
+      tipos_consulta:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetTagListResponse:
+    required:
+      - tags
+    properties:
+      tags:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            categoria:
+              type: number
+            descricao:
+              type: string
+  GetPerfilListResponse:
+    required:
+      - perfis
+    properties:
+      perfis:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            sigla:
+              type: string
+            descricao:
+              type: string
+            titulo:
+              type: string
+            ativo:
+              type: boolean
+            exige_unidade:
+              type: boolean
+  GetPeriodicidadeListResponse:
+    required:
+      - periodicidades
+    properties:
+      periodicidades:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetParametroFonteResponse:
+    required:
+      - fontes
+    properties:
+      fontes:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            sigla:
+              type: string
+            descricao:
+              type: string
+  GetClassificacaoResponse:
+    required:
+      - classificacoes
+    properties:
+      classificacoes:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  GetUnidadeMedidaResponse:
+    required:
+      - unidades
+    properties:
+      unidades:
+        type: array
+        items:
+          type: object
+          properties:
+            codigo:
+              type: number
+            descricao:
+              type: string
+  TagCategoria:
+    description: Objeto categoria de marcadores
+    type: object
+    properties:
+      codigo:
+        type: number
+        description: Código da categoria de tags
+      descricao:
+        type: string
+        description: Descrição da categoria de tags
+      Tags:
+        type: array
+        items:
+          type: object
+  CategoriaAnalise:
+    description: Objeto categoria de análise
+    type: object
+    properties:
+      codigo:
+        type: string
+        description: mnemonico da categoria de análise
+      titulo:
+        type: string
+        description: Titulo da categoria de análise
+      referencia:
+        type: string
+        description: Referencia da categoria de analise
+      Itens:
+        type: array
+        items:
+          type: object
+  Fonte:
+    description: Objeto fonte de dados
+    type: object
+    properties:
+      codigo:
+        type: number
+        description: Código da fonte de dados
+      descricao:
+        type: string
+        description: Descrição da fonte de dados
+  BancoDados:
+    description: Objeto banco de dados
+    type: object
+  UnidadeMedida:
+    description: Objeto unidade de medida
+    type: object
+    properties:
+      codigo:
+        type: number
+        description: Código da categoria de tags
+      descricao:
+        type: string
+        description: Descrição da categoria de tags
+  GetIndicadorConsulta:
+    required:
+      - count
+      - rows
+    properties:
+      count:
+        type: integer
+      rows:
+        type: array
+        items:
+          type: object
+  SuccessResponse:
+    required:
+      - codret
+      - mensagem
+    properties:
+      codret:
+        type: number
+      mensagem:
+        type: string
+  ErrorResponseTratado:
+    description: Erro generico
+    type: object
+
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      codret:
+        type: string
+      message:
+        type: string

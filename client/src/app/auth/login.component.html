@@ -1,0 +1,233 @@
+<div id="extr-page">
+<header id="header" class="animated fadeInDown">
+
+  <div id="logo-group">
+    <span id="logo"> <img src="assets/img/logo.png" alt="SmartAdmin"> </span>
+  </div>
+
+  <span id="extr-page-header-space" *ngIf="isSCPA()"> <span class="hidden-mobile hiddex-xs">Não tem uma conta?</span> <a [href]="env.urlNewUser" class="btn btn-danger">Cria uma conta</a> </span>
+
+</header>
+<div id="main" role="main" class="animated fadeInDown">
+
+  <div id="content" class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8 hidden-xs hidden-sm">
+        <h1 class="txt-color-red login-header-big">{{ title }}</h1>
+
+        <div class="hero">
+          <div class="pull-left login-desc-box-l">
+            <h4 class="paragraph-header">Controle dos indicadores do {{ orgao }}</h4>
+          </div>
+          <img src="assets/img/demo/iphoneview.png" class="pull-right display-image" alt="" style="width:210px">
+        </div>
+
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+        <div class="well no-padding">
+          <form class="smart-form client-form" (ngSubmit)="login()" f="ngForm" novalidate>
+            <header>
+              Login
+            </header>
+            <fieldset>
+              <section>
+                <label class="label">Usuário</label>
+                <label class="input"> <i class="icon-append fa fa-user"></i>
+                  <input type="email" name="email" data-smart-validate-input=""
+                  data-required="" data-email="" data-message-required="Entre com seu email"
+                  data-message-email="Entre com um usuário válido" [(ngModel)]="model.usuario" #username="ngModel" [ngModelOptions]="{standalone: true}" required>
+                  <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i>
+                    Entre com usuário/senha</b></label>
+              </section>
+              <section>
+                <label class="label">Senha</label>
+                <label class="input"> <i class="icon-append fa fa-lock"></i>
+                  <input type="password" name="password" data-smart-validate-input="" data-required="" data-minlength="3" data-maxnlength="20" data-message="Entre com uma senha"
+                  [(ngModel)]="model.senha" #username="ngModel" [ngModelOptions]="{standalone: true}" required>
+                  <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Entre
+                    sua senha</b> </label>
+
+                <div class="note">
+                  <a [href]="env.urlForgetPassword">Esqueceu a senha?</a>
+                </div>
+              </section>
+              <section>
+                <label class="checkbox">
+                  <input type="checkbox" name="remember" checked>
+                  <i></i>Lembre-se</label>
+              </section>
+            </fieldset>
+            <footer>
+              <button class="btn btn-primary">
+                Entrar
+              </button>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<div bsModal #complementoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="complementoModal.hide()">
+          &times;
+        </button>
+        <h4 class="modal-title">Complemento de cadastro</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="well no-padding">
+
+              <form id="form-complemento" #f="ngForm" [saBootstrapValidator]="validatorOptions"
+                  (onSubmit)="onSubmit(f)">
+                  <fieldset style="margin: 15px">
+                    <legend>Usuário</legend>
+
+                    <div class="row">
+                      <div class="form-group col-xs-12 col-lg-12">
+                        <label></label>
+                        <div class="inputGroupContainer">
+                          <div class="input-group">
+                            <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome Completo" [(ngModel)]="newuser.nome" />
+                            <span class="input-group-addon"><i class="icon-append fa fa-user"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-xs-6 col-lg-6">
+                        <label></label>
+                        <div class="inputGroupContainer">
+                          <div class="input-group">
+                            <input type="text" id="cpf" class="form-control" name="cpf" placeholder="CPF" saMaskedInput="099.099.099-09" [(ngModel)]="newuser.cpf">
+                            <span class="input-group-addon"><i class="icon-append fa fa-circle-o"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group col-xs-6 col-lg-6">
+                        <label></label>
+                        <div class="inputGroupContainer">
+                          <div class="input-group">
+                            <input class="form-control" id="email" type="email" name="email" placeholder="Endereço de email" [(ngModel)]="newuser.email"/>
+                            <span class="input-group-addon"><i class="icon-append fa fa-envelope"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-xs-12 col-lg-12">
+                        <label></label>
+                        <div class="inputGroupContainer">
+                          <div class="input-group">
+                            <input type="text" class="form-control" name="cargo" placeholder="Cargo ocupado" [(ngModel)]="newuser.cargo"/>
+                            <span class="input-group-addon"><i class="icon-append fa fa-briefcase"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-xs-6 col-lg-6">
+                        <label></label>
+                        <div class="inputGroupContainer">
+                          <div class="input-group">
+                            <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone Fixo para Contato"
+                              saMaskedInput="(00) 0000-0000" [ngModel]="newuser.telefone" />
+                            <span class="input-group-addon"><i class="icon-append fa fa-phone"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group col-xs-6 col-lg-6">
+                        <label></label>
+                        <div class="inputGroupContainer">
+                          <div class="input-group">
+                            <input class="form-control" id="celular" name="celular" type="text"
+                            placeholder="Telefone Celular" [ngModel]="newuser.celular" saMaskedInput="(00) 0 0000-0000"/>
+                            <span class="input-group-addon"><i class="icon-append fa fa-mobile"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-xs-6 col-lg-6">
+                        <label></label>
+                        <div class="inputGroupContainer">
+                          <div class="input-group">
+                            <input type="text" class="form-control" name="ramal" id="ramal"
+                              placeholder="Ramal" saMaskedInput="9999" [ngModel]="newuser.ramal"/>
+                            <span class="input-group-addon"><i class="icon-append fa fa-phone"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group col-xs-6 col-lg-6">
+                          <label></label>
+                          <br/>
+                          <label class="radio radio-inline no-margin">
+                            <input type="radio" name="sexo" value="M" class="radiobox style-1" [(ngModel)]="newuser.sexo"/>
+                            <span>Masculino</span> </label>
+
+                          <label class="radio radio-inline">
+                            <input type="radio" name="sexo" value="F" class="radiobox style-1" [(ngModel)]="newuser.sexo"/>
+                            <span>Feminino</span> </label>
+                        </div>
+                    </div>
+                    <legend >Perfil solicitado</legend>
+                    <div class="row" style="margin: 10px">
+
+                      <div class="form-group col-md-12">
+                          <ng-container *ngFor="let item of colecaoPerfis">
+                              <label class="radio">
+                                <input type="radio" class="radiobox style-1" name="perfilusr" [(ngModel)]="newuser.PerfilCodigo" [value]="item.codigo">
+                                <span>{{ item.sigla }} - {{ item.titulo }}</span>
+                              </label>
+                          </ng-container>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-xs-12 col-lg-12">
+                        <label></label>
+                        <div class="selectContainer">
+                            <select name="UnidadeCodigo"  select2 style="width:100%" class="select2" id="UnidadeCodigo" [(ngModel)]="newuser.UnidadeCodigo">
+                              <option value="" disabled>Selecione uma unidade</option>
+                              <optgroup label="Unidade de Lotação">
+                              <ng-container *ngFor="let item of colecaoUnidades">
+                                <option value="{{item.codigo}}">{{ item.sigla }} - {{ item.nome}}</option>
+                              </ng-container>
+                              </optgroup>
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+
+                  </fieldset>
+
+
+                  <div class="form-actions">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-eye"></i>
+                            Salva
+                          </button>
+                        </div>
+                      </div>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

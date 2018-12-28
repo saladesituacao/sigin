@@ -1,0 +1,55 @@
+<div id="content">
+  <div class="row">
+    <sa-big-breadcrumbs [items]="['Categoria de análise', 'Lista']" icon="file-text-o" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></sa-big-breadcrumbs>
+  </div>
+  <sa-widgets-grid>
+    <!-- row -->
+    <div class="row">
+      <!-- NEW WIDGET START -->
+      <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <sa-widget class="well">
+          <!-- widget options:
+              usage: <sa-widget id="wid-id-0" [editbutton]="false">
+              [colorbutton]="false"
+              [editbutton]="false"
+              [togglebutton]="false"
+              [deletebutton]="false"
+              [fullscreenbutton]="false"
+              [custombutton]="false"
+              [collapsed]="true"
+              [sortable]="false"
+          -->
+          <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+
+            <h2>Widget Title </h2>
+          </header>
+          <!-- widget div-->
+          <div>
+            <!-- widget content -->
+            <div class="widget-body no-padding" data-sparkline-container="">
+              <sa-datatable #listaCategorias [options]="options"
+                         [detailsFormat]="detailsFormat"
+                         tableClass="display projects-table table table-striped table-bordered table-hover"
+                         width="100%"
+                         (onInit)="getCategorias()">
+                <thead>
+                <tr>
+                  <th></th>
+                  <th>Código</th>
+                  <th>Descrição</th>
+                </tr>
+                </thead>
+              </sa-datatable>
+            </div>
+            <!-- end widget content -->
+          </div>
+          <!-- end widget div -->
+        </sa-widget>
+        <!-- end widget -->
+      </article>
+    </div>
+    <!-- end row -->
+  </sa-widgets-grid>
+  <!-- end widget grid -->
+</div>
