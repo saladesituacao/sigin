@@ -91,7 +91,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: true,
     createdAt: 'dt_inclusao',
     updatedAt: 'dt_atualizacao',
-    tableName: 'tb_user_sigin'
+    tableName: 'tb_user_mgi'
   });
   return User;
 };

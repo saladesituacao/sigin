@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 import { environment } from '../../environments/environment';
+import { getUrlScheme } from '@angular/compiler';
 
 export class REST{
 
@@ -13,6 +14,13 @@ export class REST{
       return `${environment.url}${environment.API_URL}${url}`;
     else
       return `${environment.url}${url}`;
+  }
+
+  protected getURLLogin(url){
+    if(!environment.urlAuth){
+      return this.getURL(url,false);
+    }
+    return `${environment.urlAuth}${url}`;
   }
 
   protected get(path:string){
@@ -34,7 +42,7 @@ export class REST{
     return this.http.patch(this.getURL(path), objeto, this.jwt()).map(
       (response: Response) => response.json());
   }
-  
+
   protected delete(path:string){
     return this.http.delete(this.getURL(path), this.jwt()).map(
       (response: Response) => response.json());

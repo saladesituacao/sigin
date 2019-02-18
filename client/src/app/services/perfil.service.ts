@@ -9,6 +9,6 @@ export class PerfilService extends REST {
     super(http);
   }
   getAll(){
-    return this.get(`/perfil?aplicacao=${environment.aplicacao}`);
+    return this.get(`/perfis?aplicacao=${environment.aplicacao}`);
   }
 }

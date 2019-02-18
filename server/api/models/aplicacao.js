@@ -11,6 +11,11 @@ module.exports = function(sequelize, DataTypes) {
         primaryKey: true,
         field: 'co_aplicacao'
     },
+    sigla: {
+      type: DataTypes.STRING(255),
+      field: 'ds_sigla',
+      allowNull: false
+    },
     descricao: {
         type: DataTypes.STRING(255),
         field: 'ds_aplicacao',

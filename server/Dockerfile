@@ -25,9 +25,9 @@ LABEL maintainer="joserobertovasconcelos@gmail.com" \
   * SEARCH_BASE - Qual a base de busca do usuário do login no serviço de diretório. Por exemplo: DC=exemplo, DC=com, DC=br \
   * SEARCH_FILTER - Qual o filtro. Por exemplo: (uid={{username}}).  O nome username é o utilizado pelo sistema para retornar a identificação do usuário que está logando. \
   * NAMEFIELD - Nome do campo do ldap que retorna o nome (ex: givenName ) \
-  * MAILFIELD - Nome do campo do ldap que retorna o email (ex: mail ) \
+  * MAILFIELD - Nome do campo do ldap que retorna o email (ex: mail ) "
 
-# Bundle APP files
+
 RUN mkdir -p /var/opt/sigin
 
 ADD . /var/opt/sigin

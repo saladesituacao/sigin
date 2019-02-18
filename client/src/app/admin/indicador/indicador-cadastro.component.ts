@@ -371,8 +371,11 @@ export class IndicadorCadastroComponent implements OnInit, OnDestroy, AfterViewI
   async onSubmit(form){
     let valor: Indicador = Object.assign(this.indicador, form.value);
     $(':input[type="submit"]').prop('disabled', false);
+    console.log('Passei aqui onSubmit')
     if(form.valid && this.validacaoAdicional(valor)){
+      console.log('Formulario Valido')
       if(this.flag_update){
+        console.log('Update')
         // Atualiza dados
         this.indicadorService.update(valor).subscribe(resp=>{
           if(resp.codret==0){
@@ -384,19 +387,20 @@ export class IndicadorCadastroComponent implements OnInit, OnDestroy, AfterViewI
           this.util.msgErro(JSON.parse(err._body).message);
         });
       }else{
+        console.log('Insert')
         // Inclui um novo
         valor['codigo'] = form.value.codigo_edit.toUpperCase();
 
         // ------------------------------------------------------------
         //FIX: coloca validacao repeticao na tela (validador)
-        let isExistsCodigo = await this.isExists(valor['codigo'] );
+        //let isExistsCodigo = await this.isExists(valor['codigo'] );
 
         console.log('TEstando');
 
-        if(isExistsCodigo){
-          this.util.msgSucessoEdicao(`Código ${valor['codigo']} já existe no cadastro.`);
-          return false;  // Nao continua
-        }
+        //if(isExistsCodigo){
+        //  this.util.msgSucessoEdicao(`Código ${valor['codigo']} já existe no cadastro.`);
+        //  return false;  // Nao continua
+        //}
 
         // ------------------------------------------------------------
         // Cadastra um novo indicador

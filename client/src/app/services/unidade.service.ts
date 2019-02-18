@@ -8,7 +8,7 @@ export class UnidadeService extends REST {
     super(http);
   }
   getAll(){
-    return this.get('/unidade');
+    return this.get('/unidades');
   }
 
   getUnidade(codigo:number){
@@ -16,7 +16,7 @@ export class UnidadeService extends REST {
   }
 
   create(unidade:any){
-    return super.post('/unidade', unidade);
+    return super.post('/unidades', unidade);
   }
 
   update(unidade:any){

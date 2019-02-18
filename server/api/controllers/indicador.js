@@ -98,7 +98,8 @@ module.exports = {
     }).catch(err=>{
       if('errors' in err){
         if(err.errors.length>0){
-          res.status(500).json(Object.assign({codret: 1001},err.errors[0]));
+          console.log('Erro na inclusao do indicador ==>', {codret: 1001, message: `Erro na inclusão do indicador ${err.errors[0].value}: ${err.errors[0].message}`});
+          res.status(500).json({codret: 1001, message: `Erro na inclusão do indicador ${err.errors[0].value}: ${err.errors[0].message}`});
         }
       }else{
         res.status(500).json({codret: 1001, message: "Erro no cadastramento do indicador"});

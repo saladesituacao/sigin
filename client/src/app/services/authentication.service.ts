@@ -16,7 +16,7 @@ export class AuthenticationService extends REST implements CanActivate{
     }
 
     login(usuario: string, senha: string) {
-        return this.gethttp().post(super.getURL('/login', false),
+        return this.gethttp().post(super.getURLLogin('/login'),
           {username: usuario, password: senha, aplicacao: environment.aplicacao}, super.jwt()).map(
           (response: Response) => {
             let resp = response.json();
@@ -34,7 +34,11 @@ export class AuthenticationService extends REST implements CanActivate{
     }
 
     label(nome:string){
-      return nome.split(' ')[0];
+      console.log('Nome:', nome)
+      var ans = 'Desconhecido';
+      if(nome)
+        ans = nome.split(' ')[0]
+      return ans;
     }
 
     canActivate() {
