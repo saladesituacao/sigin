@@ -14,7 +14,9 @@ web_app_build:
     script:
         - cd client
         - npm install -g @angular/cli@1.0.6
-        - npm install && ng build --env=prod
+        - npm install
+        - npm install jquery@2.2.4
+        - ng build --env=prod
     artifacts:
         paths:
             - client/dist
