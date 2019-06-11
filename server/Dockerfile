@@ -32,7 +32,6 @@ RUN mkdir -p /var/opt/sigin
 
 ADD . /var/opt/sigin
 WORKDIR /var/opt/sigin
-RUN  npm install
 
 EXPOSE 8000
 
