@@ -72,6 +72,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   swaggerExpress.runner.swagger.info.title = process.env.TITLE || config_param.title;
   swaggerExpress.runner.swagger.info.description = process.env.DESCRIPTION || config_param.description;
 
+  console.log('Schema:', process.env.SCHEMA_LOGIN || config_param.schema_login);
   let isExtern = (process.env.SCHEMA_LOGIN || config_param.schema_login) == 'external';
   if(isExtern){
     delete swaggerExpress.runner.swagger.paths['/login'];

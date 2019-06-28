@@ -84,6 +84,7 @@ module.exports = function(passport, login_schema) {
                   searchFilter: process.env.SEARCH_FILTER || config_param.searchFilter
                 }
       }
+      console.log('LDAP Config:', opts);
       passport.use('ldap', new LdapStrategy(opts,(user,done)=>{
         console.log('Autenticacao LDAP', user);
         done(null,{
