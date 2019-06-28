@@ -1,0 +1,79 @@
+# swagger configuration file
+
+# values in the swagger hash are system configuration for swagger-node
+swagger:
+
+  fittingsDirs: [ api/fittings ]
+  defaultPipe: null
+  swaggerControllerPipe: swagger_controllers  # defines the standard processing pipe for controllers
+
+  # values defined in the bagpipes key are the bagpipes pipes and fittings definitions
+  # (see https://github.com/apigee-127/bagpipes)
+  bagpipes:
+
+    _router:
+      name: swagger_router
+      mockMode: false
+      mockControllersDirs: [ api/mocks ]
+      controllersDirs: [ api/controllers ]
+
+    _swagger_validate:
+      name: swagger_validator
+      validateResponse: true
+
+    # pipe for all swagger-node controllers
+    swagger_controllers:
+      - onError: json_error_handler
+      - cors
+      - swagger_security
+      - _swagger_validate
+      - express_compatibility
+      - _router
+
+    # pipe to serve swagger (endpoint is in swagger.yaml)
+    swagger_raw:
+      name: swagger_raw
+
+# any other values in this file are just loaded into the config for application access...
+config:
+  host: localhost:8000
+  secret: bZJc2sWbQLKos6GkHn/VB9oXwQt8S0R0kRvJ5/xJ89E=
+  #bypass: true
+  # -------------------------------------------
+  # | Banco de dados do SIGIN                 |
+  # -------------------------------------------
+  hostdb: desenv.saude.df.gov.br
+  user: vasconcelos
+  password: serenaya00
+  database: dbsalasituacao
+  schema: dbmgi
+
+  # -------------------------------------------
+  # | Tabela interna de resultados            |
+  # -------------------------------------------
+  tabela_indicadores: tb_resultado
+
+  # -------------------------------------------
+  # | SCPA                                    |
+  # -------------------------------------------
+  #schema_login: scpa
+  #wsdl:
+  #system:
+  # -------------------------------------------
+  # | LDAP                                    |
+  # -------------------------------------------
+  schema_login: ldap
+  url: 'ldap://localhost'
+  bindDn: 'cn=admin, dc=synapsys, dc=com, dc=br'
+  bindCredentials: 'gFGcZxyrnc8pT8se'
+  searchBase: 'DC=synapsys, DC=com, DC=br'
+  searchFilter: '(uid={{username}})'
+  mailfield: 'mail'
+  namefield: 'givenName'
+  # -------------------------------------------
+  # | Documentacao                            |
+  # -------------------------------------------
+  title: Titulo
+  #company: Company
+  description: Description
+  debug: false
