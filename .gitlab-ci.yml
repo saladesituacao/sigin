@@ -16,7 +16,7 @@ web_app_build:
         - npm install -g @angular/cli@1.0.6
         - npm install
         - npm install jquery@2.2.4
-        - ng build --env=prod
+        - ng build --env=docker
     artifacts:
         paths:
             - client/dist
