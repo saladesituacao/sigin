@@ -6,7 +6,7 @@ COPY dist /usr/share/nginx/html
 ENV URL_REST "http://exemplo.com"
 ENV CONTEXT_REST "/api"
 ENV URL_AUTH ""
-ENV ID_APP 1
+ENV APP "MGI"
 
 EXPOSE 80
 #CMD ["nginx", "-g", "daemon off;"]
