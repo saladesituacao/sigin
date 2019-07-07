@@ -70,10 +70,16 @@ config:
   searchFilter: '(uid={{username}})'
   mailfield: 'mail'
   namefield: 'givenName'
+  aplicacao_sigla: 'SIGIN'
+  # -------------------------------------------
+  # | External                                    |
+  # -------------------------------------------
+  #schema_login: external
+
   # -------------------------------------------
   # | Documentacao                            |
   # -------------------------------------------
   title: Titulo
-  #company: Company
+  company: Company
   description: Description
   debug: false

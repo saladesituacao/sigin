@@ -2194,9 +2194,6 @@ definitions:
       password:
         description: Senha do usuário
         type: string
-      aplicacao:
-        description: Aplicação
-        type: integer
 
   Token:
     type: object

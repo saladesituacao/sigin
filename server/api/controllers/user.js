@@ -23,7 +23,7 @@ module.exports = {
     return models.User.findAll({
       include: [ { model: models.Perfil,
           as: 'Perfil',
-          include: [{model: models.Aplicacao, as: 'Aplicacao', where: { codigo: codigo_aplicacao } }]
+          include: [{model: models.Aplicacao, as: 'Aplicacao', where: { sigla: codigo_aplicacao } }]
          } ],
       where: {login:login}
     });

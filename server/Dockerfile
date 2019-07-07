@@ -19,6 +19,7 @@ LABEL maintainer="joserobertovasconcelos@gmail.com" \
   \
   ##LDAP \
   \
+  * APP_SIGLA - Sigla da aplicacao para ser validada. (Default: SIGIN) \
   * URL - Url do serviço de LDAP.  Por exemplo: ldap://localhost. \
   * BIND_DN - Domain name do usuário que fará a consulta LDAP. Por exemplo: cn=admin, dc=exemplo, dc=com, dc=br \
   * BIND_CREDENTIALS - Senha do usuário de consulta LDAP \

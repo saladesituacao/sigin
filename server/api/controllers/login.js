@@ -27,7 +27,7 @@ module.exports = {
             userlogin['login'] = req.body.username;
             console.log('Login de usuario==>', req.body.username);
             // Checa se o usuário logado possui cadastro do SIGIN
-            var userPerfil =  await user.getPorLogin(req.body.username, req.body.aplicacao);
+            var userPerfil =  await user.getPorLogin(req.body.username, process.env.APP_SIGLA || config_param.aplicacao_sigla || 'SIGIN');
             console.log('userPerfil==>', userPerfil);
             if(!userPerfil || userPerfil.length==0){
               var token = jwt.sign(userlogin, config_param.secret, { expiresIn: '7d' });
