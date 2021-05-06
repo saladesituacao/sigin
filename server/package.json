@@ -33,7 +33,7 @@
     "sequelize-hierarchy": "^1.2.0",
     "soap": "^0.19.0",
     "swagger-express-mw": "^0.1.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "should": "^7.1.0",
